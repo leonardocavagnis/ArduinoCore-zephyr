@@ -21,6 +21,21 @@ public:
 	EthernetClass() {}
 	virtual ~EthernetClass() {}
 
+    int begin(bool blocking = true, uint32_t additional_event_mask = 0) {
+        hardwareStatus();
+        return NetworkInterface::begin(blocking, additional_event_mask);
+    }
+
+    int begin(uint8_t *mac, unsigned long timeout = 60000, unsigned long responseTimeout = 4000) {
+        hardwareStatus();
+        if (mac != nullptr) {
+            NetworkInterface::setMACAddress(mac);
+        }
+        return NetworkInterface::begin(true, 0);
+    }
+
+	int maintain(); //TODO
+	
     EthernetLinkStatus linkStatus() {
         hardwareStatus();
         if (net_if_is_up(netif)) {
@@ -29,20 +44,7 @@ public:
             return LinkOFF;
         }
     }
-
-    bool begin(bool blocking = true, uint32_t additional_event_mask = 0) {
-        hardwareStatus();
-        return NetworkInterface::begin(blocking, additional_event_mask);
-    }
-
-    bool begin(uint8_t* mac_address, int _timeout, int _response_timeout) {
-        return begin();
-    }
-
-    bool begin(uint8_t* mac_address, IPAddress _ip, IPAddress _dns, IPAddress _gateway, IPAddress _netmask, int _timeout, int _response_timeout) {
-        return begin();
-    }
-
+	
     EthernetHardwareStatus hardwareStatus() {
         const struct device *const dev = DEVICE_DT_GET(DT_COMPAT_GET_ANY_STATUS_OKAY(ethernet_phy));
         if (device_is_ready(dev)) {
@@ -57,7 +59,21 @@ public:
         } else {
             return EthernetNoHardware;
         }
+    }    
+
+    int begin(uint8_t *mac, IPAddress ip) {
+        return begin(); //TODO
     }
+	int begin(uint8_t *mac, IPAddress ip, IPAddress dns) {
+        return begin(); //TODO
+    }
+	int begin(uint8_t *mac, IPAddress ip, IPAddress dns, IPAddress gateway) {
+        return begin(); //TODO
+    }
+	int begin(uint8_t *mac, IPAddress ip, IPAddress dns, IPAddress gateway, IPAddress subnet) {
+        return begin(); //TODO
+    }  
+	void init(uint8_t sspin = 10); //TODO
 };
 extern EthernetClass Ethernet;
 

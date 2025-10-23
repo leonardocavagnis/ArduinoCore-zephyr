@@ -22,9 +22,6 @@ public:
 	}
 
 	~ZephyrSocketWrapper() {
-		if (sock_fd != -1) {
-			::close(sock_fd);
-		}
 	}
 
 	bool connect(const char *host, uint16_t port) {

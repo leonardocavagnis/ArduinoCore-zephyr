@@ -40,7 +40,18 @@ public:
 		return ret;
 	}
 #endif
+
 	uint8_t connected() override {
+		if (sock_fd == -1) return false;
+
+		uint8_t buf;
+		int ret = ::recv(sock_fd, &buf, 1, MSG_PEEK | MSG_DONTWAIT);
+		if (ret == 0) {
+			_connected = false;
+			::close(sock_fd);
+			sock_fd = -1;
+			return false;
+		}
 		return _connected;
 	}
 

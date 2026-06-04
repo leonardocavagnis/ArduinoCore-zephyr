@@ -287,21 +287,7 @@ int analog_reference(uint8_t reference) {
 		return 0;
 	}
 
-	uint32_t voltageScaling = SYSCFG_VREFBUF_VOLTAGE_SCALE3;
-	switch (reference) {
-	case AR_INTERNAL2V5:
-		voltageScaling = SYSCFG_VREFBUF_VOLTAGE_SCALE3;
-		break;
-	case AR_INTERNAL2V05:
-		voltageScaling = SYSCFG_VREFBUF_VOLTAGE_SCALE2;
-		break;
-	case AR_INTERNAL1V8:
-		voltageScaling = SYSCFG_VREFBUF_VOLTAGE_SCALE1;
-		break;
-	case AR_INTERNAL1V5:
-		voltageScaling = SYSCFG_VREFBUF_VOLTAGE_SCALE0;
-		break;
-	}
+	uint32_t voltageScaling = reference & ~(ST_VREF_MASK);
 
 	HAL_SYSCFG_VREFBUF_VoltageScalingConfig(voltageScaling);
 	init_status = HAL_SYSCFG_EnableVREFBUF();

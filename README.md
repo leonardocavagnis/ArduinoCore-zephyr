@@ -85,10 +85,13 @@ See the [Using the Core in Arduino IDE/CLI](#using-the-core-in-arduino-idecli) s
 
 ## 📚 Libraries
 
-### Included with the core: ###
+A number of libraries are bundled with the core, and many more external
+[Arduino libraries](https://github.com/arduino-libraries) are already compatible
+with it, with the list growing all the time.
 
-### Separately supplied: ###
-- **ArduinoBLE**: This library is enabled only for the Arduino Nano 33 BLE. Please use [this branch](https://github.com/facchinm/ArduinoBLE/tree/zephyr_hci) to test it.
+If you find a library that does not work as expected, please report it in
+[this discussion](https://github.com/arduino/ArduinoCore-zephyr/discussions/496)
+or [open an issue](https://github.com/arduino/ArduinoCore-zephyr/issues).
 
 ## 🧢 Under the hood
 

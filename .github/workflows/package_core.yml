@@ -59,6 +59,7 @@ jobs:
 
       - name: Install OS dependencies
         working-directory: /opt
+        timeout-minutes: 2 # early error on Github network issues
         run: |
           sudo apt-get remove --purge man-db -y # skips the mandb triggers
           sudo apt-get update
@@ -95,6 +96,7 @@ jobs:
           echo "SUB_ARCHES=$(jq -c 'map(.subarch) | unique' <<< ${ALL_BOARD_DATA})" >> "$GITHUB_ENV"
 
       - name: Initialize Zephyr environment
+        timeout-minutes: 5 # early error on Github network issues
         run: |
           # Install Zephyr as a core user would, but faster
           yes | ./extra/bootstrap.sh -o=--filter=tree:0
@@ -176,11 +178,13 @@ jobs:
     steps:
 
       - uses: actions/download-artifact@v8
+        timeout-minutes: 5 # early error on Github network issues
         with:
           path: /home/runner
           name: build-env.tar.zstd
 
       - name: Restore build environment
+        timeout-minutes: 2 # early error on Github network issues
         run: |
           sudo apt-get remove --purge man-db -y # skips the mandb triggers
           sudo apt-get update

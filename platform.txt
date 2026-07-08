@@ -171,10 +171,22 @@ erase.pattern=
 upload.artifacts.loader={runtime.platform.path}/firmwares/{bootloader.file}
 upload.artifacts.sketch={build.path}/{build.project_name}.{upload.extension}
 
+# Expects a {loader.cmd} and a {sketch.cmd} to be defined in the tool's
+# section. The loader is flashed if it does not match the current (maybe
+# board-specific) core version. The sketch is then flashed in any case.
+# Extra arguments are passed to the loader command depending on whether
+# the sketch will be flashed in the same session or not.
+empty=
+loader.args.with_sketch={empty}
+loader.args.without_sketch={empty}
+tools.patterns.flash-loader-and-sketch="{runtime.tools.scripting-tools.path}/scripting-tools" if not eq "v{upload.port.properties.configuration}" "v{version}" {loader.cmd}{loader.args.with_sketch} :: run {sketch.cmd}
+tools.patterns.flash-loader-only={loader.cmd}{loader.args.without_sketch}
 
 #
 # OpenOCD
 #
+
+# Special handling of loader and sketch via cfg file
 
 tools.openocd.path={runtime.tools.openocd-0.12.0-arduino1-static.path}
 tools.openocd.cmd=bin/openocd
@@ -201,13 +213,17 @@ tools.bossac.path={runtime.tools.bossac-1.9.1-arduino2.path}
 tools.bossac.cmd=bossac
 tools.bossac.cmd.windows=bossac.exe
 
+tools.bossac.sketch.cmd="{path}/{cmd}" {upload.verbose} --port={serial.port.file} -U -i -e -w "{upload.artifacts.sketch}" --offset {upload.address} -R
+tools.bossac.loader.cmd="{path}/{cmd}" {upload.verbose} --port={serial.port.file} -U -i -e -w "{upload.artifacts.loader}" --offset {bootloader.address}
+tools.bossac.loader.args.without_sketch={empty} -R
+
 tools.bossac.upload.params.verbose=-d
 tools.bossac.upload.params.quiet=
-tools.bossac.upload.pattern="{path}/{cmd}" {upload.verbose} --port={serial.port.file} -U -i -e -w "{upload.artifacts.sketch}" --offset {upload.address} -R
+tools.bossac.upload.pattern={tools.patterns.flash-loader-and-sketch}
 
 tools.bossac.bootloader.params.verbose=-d
 tools.bossac.bootloader.params.quiet=
-tools.bossac.bootloader.pattern="{path}/{cmd}" {upload.verbose} --port={serial.port.file} -U -i -e -w "{upload.artifacts.loader}" --offset {bootloader.address} -R
+tools.bossac.bootloader.pattern={tools.patterns.flash-loader-only}
 
 
 #
@@ -255,6 +271,8 @@ tools.imgtool.flags=sign --key "{build.keys.keychain}/{build.keys.sign_key}" --e
 #
 # REMOTEOCD
 #
+
+# Special handling of loader and sketch via upload command
 
 tools.remoteocd.path={runtime.tools.remoteocd.path}
 tools.remoteocd.cmd=remoteocd

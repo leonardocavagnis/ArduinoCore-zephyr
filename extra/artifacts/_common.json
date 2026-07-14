@@ -67,6 +67,11 @@
       "packager": "arduino",
       "name": "bin2uf2",
       "version": "0.1.0"
+    },
+    {
+      "packager": "arduino",
+      "name": "scripting-tools",
+      "version": "0.0.7"
     }
   ]
 }

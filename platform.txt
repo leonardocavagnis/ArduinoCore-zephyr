@@ -247,22 +247,26 @@ tools.dfu-util.upload.pattern={tools.patterns.flash-loader-and-sketch}
 
 tools.dfu-util.bootloader.params.verbose=-d
 tools.dfu-util.bootloader.params.quiet=
-tools.dfu-util.bootloader.pattern={loader.cmd}{leave.dfuse}
+tools.dfu-util.bootloader.pattern={tools.patterns.flash-loader-only}
 
 
 #
 # PICOTOOL
 #
 
+tools.picotool.sketch.cmd="{path}/{cmd}" {upload.verbose} -n -D "{upload.artifacts.sketch}"
+tools.picotool.loader.cmd="{path}/{cmd}" {upload.verbose} -n -D "{upload.artifacts.loader}"
+tools.picotool.loader.args.with_sketch={empty} -R
+
 tools.picotool.path={runtime.tools.rp2040tools.path}
 tools.picotool.cmd=rp2040load
 tools.picotool.upload.params.verbose=-v
 tools.picotool.upload.params.quiet=
-tools.picotool.upload.pattern="{path}/{cmd}" {upload.verbose} -D "{upload.artifacts.sketch}"
+tools.picotool.upload.pattern={tools.patterns.flash-loader-and-sketch}
 
 tools.picotool.bootloader.params.verbose=-v
 tools.picotool.bootloader.params.quiet=
-tools.picotool.bootloader.pattern="{path}/{cmd}" {upload.verbose} -D "{upload.artifacts.loader}"
+tools.picotool.bootloader.pattern={tools.patterns.flash-loader-only}
 
 
 #

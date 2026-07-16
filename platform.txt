@@ -230,18 +230,24 @@ tools.bossac.bootloader.pattern={tools.patterns.flash-loader-only}
 # DFU_UTIL
 #
 
-upload.dfuse=--dfuse-address={upload.address}:leave
-bootloader.dfuse=--dfuse-address={bootloader.address}:leave
+# overridable by boards.txt
+leave.dfuse=:leave
+upload.dfuse=--dfuse-address={upload.address}
+bootloader.dfuse=--dfuse-address={bootloader.address}
 
 tools.dfu-util.path={runtime.tools.dfu-util.path}
 tools.dfu-util.cmd=dfu-util
+tools.dfu-util.sketch.cmd="{path}/{cmd}" --device ,{upload.vid}:{upload.pid} -D "{upload.artifacts.sketch}" -a{upload.interface} {upload.dfuse}{leave.dfuse}
+tools.dfu-util.loader.cmd="{path}/{cmd}" --device ,{bootloader.vid}:{bootloader.pid} -D "{upload.artifacts.loader}" -a{bootloader.interface} {bootloader.dfuse}
+tools.dfu-util.loader.args.without_sketch={leave.dfuse}
+
 tools.dfu-util.upload.params.verbose=-d
 tools.dfu-util.upload.params.quiet=
-tools.dfu-util.upload.pattern="{path}/{cmd}" --device ,{upload.vid}:{upload.pid} -D "{upload.artifacts.sketch}" -a{upload.interface} {upload.dfuse}
+tools.dfu-util.upload.pattern={tools.patterns.flash-loader-and-sketch}
 
 tools.dfu-util.bootloader.params.verbose=-d
 tools.dfu-util.bootloader.params.quiet=
-tools.dfu-util.bootloader.pattern="{path}/{cmd}" --device ,{bootloader.vid}:{bootloader.pid} -D "{upload.artifacts.loader}" -a{bootloader.interface} {bootloader.dfuse}
+tools.dfu-util.bootloader.pattern={loader.cmd}{leave.dfuse}
 
 
 #

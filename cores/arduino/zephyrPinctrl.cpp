@@ -31,8 +31,9 @@ namespace arduino {
  * pinctrl configuration from devicetree.
  */
 #define NODE_SELECTED(node_id)                                                                     \
-	UTIL_OR(DT_PROP(node_id, zephyr_deferred_init),                                                \
-			DT_SAME_NODE(node_id, DT_CHOSEN(zephyr_console)))
+	UTIL_AND(DT_NODE_HAS_PROP(node_id, pinctrl_0),                                                 \
+			 UTIL_OR(DT_PROP(node_id, zephyr_deferred_init),                                       \
+					 DT_SAME_NODE(node_id, DT_CHOSEN(zephyr_console))))
 
 #define PINCTRL_DEFINE_IF_SELECTED(node_id)                                                        \
 	COND_CODE_1(NODE_SELECTED(node_id), (PINCTRL_DT_DEFINE(node_id);), ())

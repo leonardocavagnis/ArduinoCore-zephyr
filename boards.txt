@@ -156,10 +156,10 @@ ek_ra8d1.build.board=EK_RA8D1
 #ek_ra8d1.recipe.hooks.objcopy.postobjcopy.4.pattern=cp {build.variant.path}/flasher.jlink "{build.path}/flasher.jlink"
 #ek_ra8d1.recipe.hooks.objcopy.postobjcopy.5.pattern=sed -i 's|SKETCH|"{build.path}/{build.project_name}.llext.dfu.bin"|g' "{build.path}/flasher.jlink"
 
-ek_ra8d1.vid.0=0x2341
-ek_ra8d1.pid.0=0x0077
-ek_ra8d1.upload_port.0.vid=0x2341
-ek_ra8d1.upload_port.0.pid=0x0077
+ek_ra8d1.vid.0=0x045b
+ek_ra8d1.pid.0=0x0261
+ek_ra8d1.upload_port.0.vid=0x045b
+ek_ra8d1.upload_port.0.pid=0x0261
 
 ek_ra8d1.upload.tool=pyocd
 ek_ra8d1.upload.tool.default=pyocd
@@ -306,7 +306,7 @@ nicla_vision.build.extra_flags=
 nicla_vision.build.postbuild.cmd="{tools.imgtool.path}/{tools.imgtool.cmd}" exit
 nicla_vision.build.board=NICLA_VISION
 nicla_vision.vid.0=0x2341
-nicla_vision.pid.0=0x005b
+nicla_vision.pid.0=0x005f
 nicla_vision.upload_port.0.vid=0x2341
 nicla_vision.upload_port.0.pid=0x025f
 
@@ -480,6 +480,8 @@ portentac33.bootloader.tool.default=dfu-util
 portentac33.bootloader.file=zephyr-{build.variant}.bin
 portentac33.bootloader.interface=0
 portentac33.bootloader.address=0x10000
+portentac33.bootloader.vid=0x2341
+portentac33.bootloader.pid=0x0368
 portentac33.bootloader.dfuse=
 
 # the space before -Q is important

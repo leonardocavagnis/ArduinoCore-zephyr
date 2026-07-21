@@ -164,6 +164,12 @@ pluggable_monitor.required.serial=builtin:serial-monitor
 # Uploader tools
 # --------------
 
+# Shared defaults for all boards, unless overridden in boards.txt
+bootloader.vid={upload_port.0.vid}
+bootloader.pid={upload_port.0.pid}
+upload.vid={bootloader.vid}
+upload.pid={bootloader.pid}
+
 # No erase command is needed for Zephyr targets
 erase.pattern=
 

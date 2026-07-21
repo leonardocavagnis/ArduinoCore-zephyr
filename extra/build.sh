@@ -68,7 +68,11 @@ else
 	fi
 fi
 
+# Save the build version to loader/VERSION and for later use in local files
+build_version=$(extra/get_core_version.sh loader/VERSION)
+
 echo
+echo "Build version: $build_version"
 echo "Build target: $target $args"
 
 # Get the variant name (NORMALIZED_BOARD_TARGET in Zephyr)
@@ -138,31 +142,18 @@ update_local_field() {
 	local field=$1
 	local value="$2"
 	local comment="$3"
-	local full_field_name="${board}.${field}"
+
+	if [ -z "$board" ]; then
+		local file="platform.local.txt"
+		local full_field_name="${field}"
+	else
+		local file="boards.local.txt"
+		local full_field_name="${board}.${field}"
+	fi
 	local match_regexp="${full_field_name//./\\.}" # escape dots
 
-	if [ -n "$comment" ]; then
-		# if there's a comment, add/update it as a commented-out line above the actual field
-		if grep -qE "^# ${match_regexp}:" boards.local.txt; then
-			sed -i -e "s/^# ${match_regexp}:.*/# ${full_field_name}: ${comment}/" boards.local.txt
-		else
-			echo "# ${full_field_name}: ${comment}" >> boards.local.txt
-		fi
-	fi
-
-	# update the actual field line
-	if grep -qE "^${match_regexp}" boards.local.txt; then
-		sed -i -e "s/^${match_regexp}=.*/${full_field_name}=${value}/" boards.local.txt
-	else
-		echo "${full_field_name}=${value}" >> boards.local.txt
-	fi
-}
-
-# update properties on boards.local.txt from the generated files
-if [ ! -z "$board" ]; then
-
-	if [ ! -f boards.local.txt ] ; then
-		cat << EOF > boards.local.txt
+	if [ ! -f $file ] ; then
+		cat << EOF > $file
 #########################################################################################
 #
 # AUTO GENERATED FILE - DO NOT EDIT
@@ -172,6 +163,33 @@ if [ ! -z "$board" ]; then
 
 EOF
 	fi
+
+	if [ -n "$comment" ]; then
+		# if there's a comment, add/update it as a commented-out line above the actual field
+		if grep -qE "^# ${match_regexp}:" $file; then
+			sed -i -e "s/^# ${match_regexp}:.*/# ${full_field_name}: ${comment}/" $file
+		else
+			echo "# ${full_field_name}: ${comment}" >> $file
+		fi
+	fi
+
+	# update the actual field line
+	if grep -qE "^${match_regexp}" $file; then
+		sed -i -e "s/^${match_regexp}=.*/${full_field_name}=${value}/" $file
+	else
+		echo "${full_field_name}=${value}" >> $file
+	fi
+}
+
+# update properties on boards.local.txt from the generated files
+if [ ! -z "$board" ]; then
+
+	# save version to both platform.local.txt and boards.local.txt:
+	# - the platform one is reported by the IDE as _the_ core version;
+	# - the board-specific one is used by the auto-update-loader feature
+	#   (when developing, each board build should be tracked separately).
+	board="" update_local_field "version" "$build_version"
+	update_local_field "version" "$build_version"
 
 	# sketch load address: start of sketch partition, hex (exact)
 	CODE_ADDR=$(get_value_from_text_file variants/${variant}/syms-static.ld '_sketch_start')

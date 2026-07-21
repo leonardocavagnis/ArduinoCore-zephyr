@@ -484,14 +484,17 @@ portentac33.upload.interface=1
 portentac33.upload.use_1200bps_touch=true
 portentac33.upload.wait_for_upload_port=false
 portentac33.upload.native_usb=true
-portentac33.upload.dfuse=-Q -w
+portentac33.upload.dfuse=-w
 
 portentac33.bootloader.tool=dfu-util
 portentac33.bootloader.tool.default=dfu-util
 portentac33.bootloader.file=zephyr-{build.variant}.bin
 portentac33.bootloader.interface=0
 portentac33.bootloader.address=0x10000
-portentac33.bootloader.dfuse=-Q
+portentac33.bootloader.dfuse=
+
+# the space before -Q is important
+portentac33.leave.dfuse={empty} -Q
 
 ##########################################################################################
 
@@ -689,7 +692,8 @@ nano_connect.compiler.zephyr.arch.define=
 nano_connect.build.float-abi=-mfloat-abi=soft
 nano_connect.build.extra_flags=
 nano_connect.build.postbuild.cmd="{tools.imgtool.path}/{tools.imgtool.cmd}" exit
-nano_connect.recipe.hooks.objcopy.postobjcopy.3.pattern="{runtime.tools.bin2uf2.path}/bin2uf2" {upload.address} {upload.familyid} "{build.path}/{build.project_name}.{upload.extension}" "{build.path}/{build.project_name}.uf2"
+nano_connect.recipe.hooks.objcopy.postobjcopy.3.pattern="{runtime.tools.bin2uf2.path}/bin2uf2" {upload.address} {upload.familyid} "{build.path}/{build.project_name}.{upload.extension}" "{build.path}/{build.project_name}.{upload.extension}.uf2"
+nano_connect.upload.artifacts.sketch={build.path}/{build.project_name}.{upload.extension}.uf2
 nano_connect.build.board=NANO_RP2040_CONNECT
 nano_connect.compiler.zephyr=
 nano_connect.vid.0=0x2341
@@ -718,7 +722,7 @@ nano_connect.bootloader.tool.default=picotool
 nano_connect.bootloader.vid=0x2341
 nano_connect.bootloader.pid=0x005E
 nano_connect.bootloader.interface=0
-nano_connect.bootloader.file=zephyr-{build.variant}
+nano_connect.bootloader.file=zephyr-{build.variant}.uf2
 
 nano_connect.debug.tool=gdb
 nano_connect.debug.server.openocd.scripts.0=interface/{programmer.protocol}.cfg

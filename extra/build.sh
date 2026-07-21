@@ -47,18 +47,22 @@ if ! [ -z "$chosen_board" ]; then
 	# found, use the target and args from there
 	board=$(jq -cr '.board' <<< "$chosen_board")
 	target=$(jq -cr '.target' <<< "$chosen_board")
-	args=$(jq -cr '.args' <<< "$chosen_board")
+	# the args field is a single string; split it on unquoted whitespace,
+	# keeping quotes so a quoted value with spaces stays one array element
+	arg_token='(?:[^\s"'\'']+|"[^"]*"|'\''[^'\'']*'\'')+'
+	mapfile -t args < <(jq -cr '.args' <<< "$chosen_board" | grep -oP "$arg_token")
 	upload_offset=$(jq -cr '.upload_offset' <<< "$chosen_board")
 
 	# Check for debug flag and append
 	if [ x$2 == x"--debug" ]; then
-		args="$args -- -DEXTRA_CONF_FILE=../extra/debug.conf"
+		args+=(-- -DEXTRA_CONF_FILE=../extra/debug.conf)
 	fi
 else
 	# expect Zephyr-compatible target and args
 	target=$1
 	shift
-	args="$*"
+	# keep each argument as a separate array element to preserve quoting
+	args=("$@")
 	chosen_board=$(extra/get_board_details.sh | jq -cr ".[] | select(.target == \"$target\") // empty")
 	if [ ! -z "$chosen_board" ]; then
 		board=$(jq -cr '.board' <<< "$chosen_board")
@@ -73,7 +77,7 @@ build_version=$(extra/get_core_version.sh loader/VERSION)
 
 echo
 echo "Build version: $build_version"
-echo "Build target: $target $args"
+echo "Build target: $target ${args[*]}"
 
 # Get the variant name (NORMALIZED_BOARD_TARGET in Zephyr)
 variant=$(extra/get_variant_name.sh $target)
@@ -89,7 +93,7 @@ fi
 BUILD_DIR=build/${variant}
 VARIANT_DIR=variants/${variant}
 rm -rf ${BUILD_DIR}
-west build -d ${BUILD_DIR} -b ${target} loader -t llext-edk ${args}
+west build -d ${BUILD_DIR} -b ${target} loader -t llext-edk "${args[@]}"
 
 # Extract the generated EDK tarball and copy it to the variant directory
 mkdir -p ${VARIANT_DIR} firmwares

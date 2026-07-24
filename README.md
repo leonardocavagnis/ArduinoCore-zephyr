@@ -1,5 +1,5 @@
 > [!IMPORTANT]  
-> This core is approaching a stable 1.0 release. Now is the time to test it and report any issues you find — your feedback helps us iron out the remaining bugs!
+> This core is approaching a 1.0 release. Now is the time to use it and report any issues you find — your feedback helps us iron out the remaining bugs!
 >
 > [![Default branch status](https://github.com/arduino/ArduinoCore-zephyr/actions/workflows/package_core.yml/badge.svg?branch=main&event=push)](https://github.com/arduino/ArduinoCore-zephyr/actions/workflows/package_core.yml)
 

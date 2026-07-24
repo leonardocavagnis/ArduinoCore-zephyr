@@ -1,10 +1,9 @@
 > [!IMPORTANT]  
-> This core is in **BETA**. 🧪  
-> Features may change, and bugs may be present. Use for testing only and provide feedback to help us improve.
+> This core is approaching a stable 1.0 release. Now is the time to test it and report any issues you find — your feedback helps us iron out the remaining bugs!
 >
-> [![Default branch status](https://github.com/arduino/ArduinoCore-zephyr/actions/workflows/package_core.yml/badge.svg?branch=arduino&event=push)](https://github.com/arduino/ArduinoCore-zephyr/actions/workflows/package_core.yml)
+> [![Default branch status](https://github.com/arduino/ArduinoCore-zephyr/actions/workflows/package_core.yml/badge.svg?branch=main&event=push)](https://github.com/arduino/ArduinoCore-zephyr/actions/workflows/package_core.yml)
 
-# 🚧 Arduino Core for Zephyr
+# 🪁 Arduino Core for Zephyr
 
 This repository is a downstream fork of the [Arduino Core for Zephyr RTOS-based
 boards](https://github.com/zephyrproject-rtos/arduino-core-zephyr) that
@@ -12,6 +11,11 @@ includes support for Arduino software tools, allowing it to be seamlessly used
 by the [Arduino IDE](https://docs.arduino.cc/software/ide/),
 [Arduino CLI](https://docs.arduino.cc/arduino-cli/) and
 [Arduino App Lab](https://docs.arduino.cc/software/app-lab/).
+
+This core is designed to replace the [mbed OS-based Arduino
+Core](https://github.com/arduino/ArduinoCore-mbed) on all the devices it
+supported, and to provide a more modern and flexible foundation for current and
+future Arduino boards by allowing the use of Zephyr RTOS features and APIs.
 
 ## 🧐 What is Zephyr? 
 
@@ -25,25 +29,31 @@ Install the core and its toolchains via Board Manager:
 * Download and install the latest [Arduino IDE](https://www.arduino.cc/en/software) (only versions `2.x.x` are supported).
 * Open the *'Settings / Preferences'* window.
 * Open the *'Boards Manager'* from the side menu and search for *'Zephyr'*.
-  * If it doesn’t appear, add the following URL to the *'Additional Boards Manager URLs'* field: `https://downloads.arduino.cc/packages/package_zephyr_index.json` (if you have multiple URLs, separate them with a comma).
-* Install the `Arduino Zephyr Boards` platform.
-
-Alternatively, to install the core using the command line, run the following command with the Arduino CLI:
-
-```bash
-arduino-cli core install arduino:zephyr --additional-urls https://downloads.arduino.cc/packages/package_zephyr_index.json
-```
+* Install the *'Arduino Zephyr Boards'* platform (or the *'Arduino Uno Q Board'* platform if you have an Arduino UNO Q).
 
 ## 🏗️ First Use
 
-To get started with your board:
+The first time you use a Zephyr board, the *Zephyr loader* must be installed on
+the board. Since release 0.90.0 this procedure is fully automated and the
+loader will be installed automatically when you upload your first sketch.
+
+[!NOTE]
+> The Arduino Portenta C33 needs a full bootloader update to work with the
+> Zephyr core. For this board, the update *must be performed manually* the
+> first time. Follow the instructions in this post to properly update the
+> bootloader on your Portenta C33.
+
+To manually force a loader update, follow these steps:
+
 * Put the board in bootloader mode by double-clicking the RESET button.
 * Run the `Burn Bootloader` option from the IDE/CLI.
   * Note that due to limitations in the Arduino IDE, you may need to select any programmer from the `Programmers` menu.
 * Once the bootloader is installed, you can load your first sketch by placing the board into bootloader mode again.
 
 > [!NOTE]  
-> After the initial setup, future sketches will be loaded automatically without needing to reset the board.
+> After the initial setup, future sketches will be loaded automatically without
+> needing to reset the board. Each sketch update will also reflash the loader
+> if a different version is detected.
 
 ## 🔧 Troubleshooting
 
@@ -65,7 +75,7 @@ To get started with your board:
 ---
 
 #### **Q: I get an OS crash, like `<err> os: ***** USAGE FAULT *****`**
-**A:** This is usually due to a buffer overflow or coding error in the user's own code. However, since the project is still in beta 🧪, a [good bug report](#-bug-reporting) could help identify any issues in our code.
+**A:** This is usually due to a buffer overflow or coding error in the user's own code. However, a [good bug report](#-bug-reporting) could help identify any issues in the loader or Zephyr itself.
 
 ---
 
@@ -133,13 +143,6 @@ The most important components of this project are:
 > Remember to [update the loader on your board](#flash-the-loader) as well.
 
 ## 🛠️ Setup a Zephyr build environment
-
-> [!WARNING]  
-> If you checked out this repo before 0.3.2 was released, please note that
-> development has switched to the `main` branch; the old `arduino` branch will
-> be removed in the short future. Please follow this
-> [migration guide](https://github.com/arduino/ArduinoCore-zephyr/issues/163)
-> to update your local branches and outstanding PRs.
 
 In this section, we’ll guide you through setting up your environment to work on and update the Zephyr core.
 
@@ -317,7 +320,7 @@ mv ~/Arduino/hardware/arduino/zephyr ~/Arduino/hardware/arduino/zephyr.disable
 > ```bash
 > . venv/bin/activate
 > west config -d manifest.project-filter
-> west sdk install --version 0.17.0
+> west sdk install
 > west update
 > ```
 
@@ -349,18 +352,14 @@ To report a bug, open the [issues](/../../issues) and follow the instructions. A
 
 Contributions are always welcome. The preferred way to receive code contribution is by submitting a [Pull request](/../../pulls).
 
-> [!WARNING] 
-> At this stage of development, we only accept Pull requests for bug fixes and features. We do **not** accept support for new targets.
-
 ## 📌 Upcoming features
 
 - [ ] USB: switch to `USB_DEVICE_STACK_NEXT` to support PluggableUSB
-- [x] Relocate RODATA in flash to accommodate sketches with large assets
 - [ ] Provide better error reporting for failed llext operations
 - [ ] Replace [`llext_exports.c`](/loader/llext_exports.c) with proper symbols generation (via includes)
-- [ ] Fix corner cases with `std::` includes (like `<iterator>`)
 - [ ] Get rid of all warnings
 
 ## 🌟 Acknowledgments
 
-This effort would have been very hard without the [GSoC project](/README.gsoc.md) and the Zephyr community.
+This effort would have been very hard without the [GSoC project](/README.gsoc.md), the Zephyr community and all the contributors to this repo.
+Thanks to everyone who has contributed to this project!

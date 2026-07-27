@@ -195,8 +195,17 @@ VN(__aeabi_dcmple)
 VN(__aeabi_dcmpgt)
 VN(__aeabi_dcmpge)
 VN(__aeabi_dcmpun)
+/* float arithmetic */
+VN(__aeabi_fadd)
+VN(__aeabi_fsub)
+VN(__aeabi_fmul)
+VN(__aeabi_fdiv)
 /* float comparisons */
+VN(__aeabi_fcmpeq)
+VN(__aeabi_fcmplt)
 VN(__aeabi_fcmple)
+VN(__aeabi_fcmpgt)
+VN(__aeabi_fcmpge)
 VN(__aeabi_fcmpun)
 /* double <-> integer conversions */
 VN(__aeabi_d2iz)
@@ -209,6 +218,10 @@ VN(__aeabi_ul2d)
 /* float <-> double / integer conversions */
 VN(__aeabi_d2f)
 VN(__aeabi_f2d)
+VN(__aeabi_i2f)
+VN(__aeabi_ui2f)
+VN(__aeabi_f2iz)
+VN(__aeabi_f2uiz)
 VN(__aeabi_l2f)
 VN(__aeabi_ul2f)
 /* integer division */

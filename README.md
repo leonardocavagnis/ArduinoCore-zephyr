@@ -40,8 +40,9 @@ loader will be installed automatically when you upload your first sketch.
 [!NOTE]
 > The Arduino Portenta C33 needs a full bootloader update to work with the
 > Zephyr core. For this board, the update *must be performed manually* the
-> first time. Follow the instructions in this post to properly update the
-> bootloader on your Portenta C33.
+> first time. Make sure to follow the instructions in [this Help Center
+> article](https://support.arduino.cc/hc/en-us/articles/29180434600476-Install-the-Zephyr-loader-on-your-board)
+> to properly update the bootloader on your Portenta C33.
 
 To manually force a loader update, follow these steps:
 

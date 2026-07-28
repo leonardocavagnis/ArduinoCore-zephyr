@@ -184,7 +184,8 @@ jobs:
           name: build-env.tar.zstd
 
       - name: Restore build environment
-        timeout-minutes: 2 # early error on Github network issues
+        id: restore-env
+        timeout-minutes: 3 # early error on Github network issues
         run: |
           sudo apt-get remove --purge man-db -y # skips the mandb triggers
           sudo apt-get update
@@ -236,7 +237,7 @@ jobs:
           echo "::endgroup::"
 
       - name: Package board artifacts
-        if: ${{ !cancelled() }}
+        if: ${{ steps.restore-env.outcome == 'success' && !cancelled() }}
         run: |
           # add the config file to the report files, list them for later archiving
           cp firmwares/zephyr-${{ matrix.variant }}.config $REPORT.config
@@ -255,7 +256,7 @@ jobs:
           | zstd > binaries-${ARTIFACT_TAG}.tar.zstd
 
       - name: Archive board binaries
-        if: ${{ !cancelled() }}
+        if: ${{ steps.restore-env.outcome == 'success' && !cancelled() }}
         uses: actions/upload-artifact@v7
         with:
           # prefix the name with 'failed-' if the build failed, so that it is not removed
@@ -265,7 +266,7 @@ jobs:
           archive: false
 
       - name: Archive build reports
-        if: ${{ !cancelled() }}
+        if: ${{ steps.restore-env.outcome == 'success' && !cancelled() }}
         uses: actions/upload-artifact@v7
         with:
           name: build-report-${{ env.ARTIFACT_TAG }}

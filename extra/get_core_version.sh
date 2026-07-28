@@ -40,7 +40,7 @@
 # tagged version. If there are no tags at all (for example when run in a fork
 # etc), it defaults to "9.9.9-<date-time>".
 #
-# Finally, non-exact-tag versions have a "+<commit-hash[-dirty]>" appended. The
+# Finally, non-exact-tag versions have a "+g<commit-hash[-dirty]>" appended. The
 # commit hash used is taken from HEAD_REF if set - this is to ensure that in CI
 # environments the correct commit is used, even in pull requests where HEAD
 # might be a temporary detached commit.
@@ -129,7 +129,7 @@ else
 
 		# If HEAD_REF is not set, we're not in CI but in a local clone. Use the
 		# implicit HEAD and include --dirty to test for uncommitted changes.
-		v_tweak="+$(git describe --always ${HEAD_REF:---dirty})"
+		v_tweak="+g$(git describe --always ${HEAD_REF:---dirty})"
 	fi
 fi
 

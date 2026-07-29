@@ -19,6 +19,19 @@ if [ ! -f platform.txt ]; then
   exit 2
 fi
 
+REQUIRED_TOOLS="cmake curl git jq ninja pip3 python3 wget zip"
+MISSING_TOOLS=""
+for tool in $REQUIRED_TOOLS; do
+  if ! command -v "$tool" >/dev/null 2>&1; then
+    MISSING_TOOLS="$MISSING_TOOLS $tool"
+  fi
+done
+if [ -n "$MISSING_TOOLS" ]; then
+  echo "Missing required tools:$MISSING_TOOLS" >&2
+  echo "Install them before running this script." >&2
+  exit 2
+fi
+
 get_unique_field_values() {
   local field="$1"
   local file="$2"
@@ -36,7 +49,7 @@ done
 log_msg "group" "Bootstrapping Python environment for Zephyr"
 python3 -m venv venv
 source venv/bin/activate
-pip install west protobuf grpcio-tools
+pip3 install west protobuf grpcio-tools
 log_msg "endgroup"
 
 log_msg "group" "Initializing Zephyr workspace and modules: $HAL_FILTER"
@@ -50,7 +63,7 @@ fi
 west config manifest.project-filter -- "$HAL_FILTER"
 west update "$@"
 west zephyr-export
-pip install -r ../zephyr/scripts/requirements-base.txt
+pip3 install -r ../zephyr/scripts/requirements-base.txt
 log_msg "endgroup"
 
 TOOLCHAIN_VERSIONS=$(for tc in $NEEDED_TOOLCHAINS; do

@@ -360,8 +360,17 @@ EXPORT_AEABI_SYM(__aeabi_dcmple);
 EXPORT_AEABI_SYM(__aeabi_dcmpgt);
 EXPORT_AEABI_SYM(__aeabi_dcmpge);
 EXPORT_AEABI_SYM(__aeabi_dcmpun);
+/* float arithmetic */
+EXPORT_AEABI_SYM(__aeabi_fadd);
+EXPORT_AEABI_SYM(__aeabi_fsub);
+EXPORT_AEABI_SYM(__aeabi_fmul);
+EXPORT_AEABI_SYM(__aeabi_fdiv);
 /* float comparisons */
+EXPORT_AEABI_SYM(__aeabi_fcmpeq);
+EXPORT_AEABI_SYM(__aeabi_fcmplt);
 EXPORT_AEABI_SYM(__aeabi_fcmple);
+EXPORT_AEABI_SYM(__aeabi_fcmpgt);
+EXPORT_AEABI_SYM(__aeabi_fcmpge);
 EXPORT_AEABI_SYM(__aeabi_fcmpun);
 /* double <-> integer conversions */
 EXPORT_AEABI_SYM(__aeabi_d2iz);
@@ -374,6 +383,10 @@ EXPORT_AEABI_SYM(__aeabi_ul2d);
 /* float <-> double / integer conversions */
 EXPORT_AEABI_SYM(__aeabi_d2f);
 EXPORT_AEABI_SYM(__aeabi_f2d);
+EXPORT_AEABI_SYM(__aeabi_i2f);
+EXPORT_AEABI_SYM(__aeabi_ui2f);
+EXPORT_AEABI_SYM(__aeabi_f2iz);
+EXPORT_AEABI_SYM(__aeabi_f2uiz);
 EXPORT_AEABI_SYM(__aeabi_l2f);
 EXPORT_AEABI_SYM(__aeabi_ul2f);
 /* integer division */

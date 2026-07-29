@@ -419,6 +419,7 @@
 		};
 
 		user_sketch: partition@e0000 {
+			label = "user_sketch";
 			reg = <0x000E0000 0x00120000>;
 		};
 	};

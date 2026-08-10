@@ -49,7 +49,7 @@
 # VERSION format if a filename is provided as the first argument.
 
 # Determine pre-release label based on build context
-DATE="$(date -u '+%y%m%dT%H%MZ')"
+DATE="$(date -u '+%y%m%dt%H%Mz')"
 if [ -z "$GITHUB_ACTIONS" ]; then
 	# local build, highest precedence
 	KIND="wip"

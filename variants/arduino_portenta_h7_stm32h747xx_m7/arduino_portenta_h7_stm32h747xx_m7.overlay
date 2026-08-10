@@ -10,7 +10,7 @@
 
 &usart1 {
 	status = "okay";
-	zephyr,deferred-init;
+	/* usart1 is not set as deferred-init to catch early boot logs since it is assigned to zephyr,console */
 };
 
 &uart4 {
@@ -20,7 +20,12 @@
 
 &usart6 {
 	status = "okay";
-	/* usart6 is not set as deferred-init to catch early boot logs since it is assigned to zephyr,console */
+	zephyr,deferred-init;
+};
+
+&uart8 {
+	status = "okay";
+	zephyr,deferred-init;
 };
 
 &rtc {
@@ -295,9 +300,9 @@
 		zephyr,camera = &dcmi;
 		zephyr,display = &ltdc;
 		zephyr,mipi-dsi = &mipi_dsi;
-		zephyr,console = &usart6;
-		zephyr,shell-uart = &usart6;
-		zephyr,cdc-acm-uart0 = &usart6;
+		zephyr,console = &usart1;
+		zephyr,shell-uart = &usart1;
+		zephyr,cdc-acm-uart0 = &usart1;
 		zephyr,log-uart = &log_uarts;
 		arduino,camera-clock = &pwmclock;
 		arduino,eth-clock = &pwmclock;
@@ -305,7 +310,7 @@
 
 	log_uarts: log_uarts {
 		compatible = "zephyr,log-uart";
-		uarts = <&usart6 &board_cdc_acm_uart>;
+		uarts = <&usart1 &board_cdc_acm_uart>;
 	};
 
 	/* used to overcome problems with _C analog pins */
@@ -445,7 +450,7 @@ qspi_flash: &mx25l12833f {};
 				<&gpio_invalid 5 0>;			/* Hack for D20 */
 
 		cdc-acm-serial = <&board_cdc_acm_uart>; /* 'Serial' object is managed by SerialUSB */
-		serials = <&usart6>, <&usart1>, <&uart4>; /* 'Serial1' onwards */
+		serials = <&usart1>, <&uart7>, <&uart8>, <&usart6>, <&uart4>; /* 'Serial1' onwards */
 		i2cs = <&i2c3>, <&i2c1>, <&i2c4>;
 		spis = <&spi2>;
 		cans = <&fdcan1>;

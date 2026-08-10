@@ -4,6 +4,7 @@
 /venv/
 /boards.local.txt
 /platform.local.txt
+/loader/VERSION
 
 llext-edk/
 cflags.txt

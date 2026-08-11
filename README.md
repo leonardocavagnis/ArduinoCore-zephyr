@@ -94,6 +94,15 @@ See the [Using the Core in Arduino IDE/CLI](#using-the-core-in-arduino-idecli) s
 #### **Q: Wi-Fi is not working, or I get `Communication with WiFi module failed!` in the Serial Monitor**
 **A:** You are probably missing the Wi-Fi firmware, or the firmware is corrupted. Boards should come with the Wi-Fi firmware already flashed, but in case Wi-Fi is not working run the [`FlashFormat`](libraries/Storage/examples/FlashFormat/FlashFormat.ino) sketch to restore the firmware.
 
+---
+
+#### **Q: I get a `No binaries found for <board>.` when compiling a custom core**
+
+**A:** To use the Zephyr core from sources, it is not enough to install them in
+your `hardware` folder. You also need to obtain the *Zephyr loader* for the
+boards you want to use. Read on from [Under the hood](#-under-the-hood) below
+to learn how to build (or get!) those binaries.
+
 ## 📚 Libraries
 
 A number of libraries are bundled with the core, and many more external
@@ -119,10 +128,10 @@ The behavior of the `loader` can be adjusted through the `Mode` menu of the IDE:
 The most important components of this project are:
 
 * [Zephyr based loader](/loader)
-* [LLEXT](https://docs.zephyrproject.org/latest/services/llext/index.html)
-* [Actual core](/cores/arduino) with [variants](/variants) and the usual [platform](/platform.txt) and [boards](/boards) files
-* [ArduinoCore-API](https://github.com/arduino/ArduinoCore-API)
-* [zephyr-sketch-tool](/extra/zephyr-sketch-tool)
+* [Actual core](/cores/arduino) with [variants](/variants) and the usual [platform](/platform.txt) and [boards](/boards) TXT files
+* The official [ArduinoCore-API](https://github.com/arduino/ArduinoCore-API)
+* [LLEXT](https://docs.zephyrproject.org/latest/services/llext/index.html) as the glue layer between sketch and loader
+* [zephyr-sketch-tool](/extra/zephyr-sketch-tool) for packaging the sketch binary
 
 ## 🏃 Shortcut: using the Core in Arduino IDE/CLI without installing Zephyr
 
@@ -135,8 +144,8 @@ The most important components of this project are:
 > sketches and flash the loader.
 >
 > To do so, after cloning this repo, compile the `sync-zephyr-artifacts`
-> utility via `go build` and run it as `sync-zephyr-artifacts .` to retrieve
-> the precompiled files for the current revision of the core.
+> utility via `go build` and run it as `sync-zephyr-artifacts <path-to-core>`
+> to retrieve the precompiled files for the current revision of the core.
 >
 > Next, follow the instructions in [Using the Core in Arduino IDE/CLI](#using-the-core-in-arduino-idecli)
 > or [Using the Core in the Arduino App Lab](#using-the-core-in-the-arduino-app-lab)

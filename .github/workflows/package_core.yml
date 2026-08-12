@@ -673,7 +673,7 @@ jobs:
   publish-core:
     name: Publish core
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'push' && github.repository == 'arduino/ArduinoCore-zephyr' }}
+    if: ${{ github.event_name == 'push' && github.repository == 'arduino/ArduinoCore-zephyr' && !startsWith(github.ref_name, 'dependabot/') }}
     needs:
       - build-env
       - package-core
@@ -767,7 +767,7 @@ jobs:
 
   ci-builds-upload:
     name: Upload to ci-builds
-    if: ${{ github.event_name == 'push' && github.repository == 'arduino/ArduinoCore-zephyr' }}
+    if: ${{ github.event_name == 'push' && github.repository == 'arduino/ArduinoCore-zephyr' && !startsWith(github.ref_name, 'dependabot/') }}
     runs-on: ubuntu-latest
     needs:
       - build-env

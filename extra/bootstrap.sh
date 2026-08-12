@@ -82,6 +82,7 @@ for version in $(echo "$TOOLCHAIN_VERSIONS" | cut -d ' ' -f 1 | sort -u -V); do
   log_msg "endgroup"
 done
 
+NEEDED_HALS="arduino-api $NEEDED_HALS"
 log_msg "group" "Fetching blobs for: $NEEDED_HALS"
 west blobs fetch $NEEDED_HALS
 log_msg "endgroup"

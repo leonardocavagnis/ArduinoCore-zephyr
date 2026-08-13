@@ -117,14 +117,16 @@ void llext_entry(void *arg0, void *arg1, void *arg2) {
 
 /* Export Flash parameters for use by core building scripts */
 __attribute__((retain)) const uintptr_t sketch_base_addr =
-	DT_REG_ADDR(DT_GPARENT(DT_NODELABEL(user_sketch))) + DT_REG_ADDR(DT_NODELABEL(user_sketch));
+	DT_PARTITION_ADDR(DT_NODELABEL(user_sketch));
 __attribute__((retain)) const uintptr_t sketch_max_size = DT_REG_SIZE(DT_NODELABEL(user_sketch));
 
 /* Determine maximum size of the loader application */
-#if DT_HAS_FIXED_PARTITION_LABEL(image_0) /* "image_0" partition size */
-#define LOADER_MAX_SIZE DT_REG_SIZE(DT_NODE_BY_FIXED_PARTITION_LABEL(image_0))
+#if DT_HAS_PARTITION_LABEL(image_0) /* "image_0" partition size */
+#define LOADER_MAX_SIZE DT_REG_SIZE(DT_NODE_BY_PARTITION_LABEL(image_0))
 #elif CONFIG_FLASH_LOAD_SIZE > 0 /* forced value from Kconfig */
 #define LOADER_MAX_SIZE CONFIG_FLASH_LOAD_SIZE
+#elif CONFIG_FLASH_USES_MAPPED_PARTITION /* size of the mapped code partition */
+#define LOADER_MAX_SIZE DT_REG_SIZE(DT_CHOSEN(zephyr_code_partition))
 #elif CONFIG_FLASH_LOAD_OFFSET /* heuristic: size of Flash minus load offset */
 #define LOADER_MAX_SIZE (DT_REG_SIZE(DT_NODELABEL(flash0)) - CONFIG_FLASH_LOAD_OFFSET)
 #else /* default: size of whole Flash */
@@ -148,8 +150,7 @@ static int loader(const struct shell *sh) {
 		return rc;
 	}
 
-	uintptr_t base_addr =
-		DT_REG_ADDR(DT_GPARENT(DT_NODELABEL(user_sketch))) + DT_REG_ADDR(DT_NODELABEL(user_sketch));
+	uintptr_t base_addr = DT_PARTITION_ADDR(DT_NODELABEL(user_sketch));
 
 	char header[HEADER_LEN];
 	rc = flash_area_read(fa, 0, header, sizeof(header));

@@ -14,6 +14,7 @@
 #include <math.h>
 #include <zephyr/kernel.h>
 #include <time.h>
+#include <sys/time.h>
 #include <zephyr/drivers/pinctrl.h>
 #include <zephyr/device.h>
 #if defined(CONFIG_MBEDTLS)
@@ -61,6 +62,11 @@ EXPORT_LIBC_SYM(strtok);
 EXPORT_LIBC_SYM(memchr);
 EXPORT_LIBC_SYM(strdup);
 EXPORT_LIBC_SYM(memmem);
+
+// XSI strerror_r: hoisted into the firmware so std::error_code/system_error in
+// network/TLS sketches import it instead of bundling _strerror_r per sketch.
+extern int __xpg_strerror_r(int, char *, size_t);
+EXPORT_LIBC_SYM(__xpg_strerror_r);
 
 // stdlib.h
 EXPORT_LIBC_SYM(malloc);
@@ -208,6 +214,9 @@ EXPORT_SYMBOL(mbedtls_memory_buffer_alloc_init);
 #if defined(CONFIG_MBEDTLS_DEBUG)
 EXPORT_SYMBOL(mbedtls_debug_set_threshold);
 #endif
+#if defined(CONFIG_MBEDTLS_PSA_CRYPTO_CLIENT)
+EXPORT_SYMBOL(psa_crypto_init);
+#endif
 #endif
 
 #if defined(CONFIG_WIFI)
@@ -249,7 +258,9 @@ FORCE_EXPORT_SYM(__stack_chk_fail);
 FORCE_EXPORT_SYM(video_buffer_aligned_alloc);
 FORCE_EXPORT_SYM(video_buffer_alloc);
 FORCE_EXPORT_SYM(video_buffer_release);
+FORCE_EXPORT_SYM(video_import_buffer);
 FORCE_EXPORT_SYM(video_set_ctrl);
+FORCE_EXPORT_SYM(video_enqueue);
 #endif
 #if defined(CONFIG_VIDEO_BUFFER_POOL_ALLOC_OPS)
 FORCE_EXPORT_SYM(video_register_user_buffer_ops);
@@ -303,6 +314,7 @@ FORCE_EXPORT_SYM(usbd_device_set_bcd_usb);
 FORCE_EXPORT_SYM(usbd_msg_register_cb);
 FORCE_EXPORT_SYM(usbd_device_set_code_triple);
 FORCE_EXPORT_SYM(usbd_register_all_classes);
+FORCE_EXPORT_SYM(usbd_register_class);
 FORCE_EXPORT_SYM(usbd_add_configuration);
 FORCE_EXPORT_SYM(usbd_caps_speed);
 FORCE_EXPORT_SYM(usbd_can_detect_vbus);
@@ -327,15 +339,26 @@ EXPORT_SYMBOL(k_work_submit_to_queue);
 // FORCE_EXPORT_SYM(k_timer_start);
 
 EXPORT_SYMBOL(time);
+
+#ifdef CONFIG_XSI_SINGLE_PROCESS
+// Required by time()
+EXPORT_LIBC_SYM(gettimeofday);
+#endif
+
 EXPORT_SYMBOL(sys_clock_settime);
 EXPORT_SYMBOL(mktime);
 EXPORT_SYMBOL(gmtime);
 
-EXPORT_SYMBOL(printf);
-EXPORT_SYMBOL(sprintf);
-EXPORT_SYMBOL(snprintf);
+/*
+ * Export the v* forms under __real_ names. The sketch core (llext_wrappers.c)
+ * defines strong printf/sprintf/snprintf/sscanf trampolines that forward here,
+ * which keeps picolibc's vfscanf/vfprintf and the __atod_engine/__atof_engine
+ * float helpers out of the sketch llext. vsnprintf is already exported above.
+ */
+EXPORT_LIBC_SYM(vprintf);
+EXPORT_LIBC_SYM(vsprintf);
+EXPORT_LIBC_SYM(vsscanf);
 EXPORT_SYMBOL(cbvprintf);
-EXPORT_SYMBOL(sscanf);
 FORCE_EXPORT_SYM(__assert_no_args);
 EXPORT_SYMBOL(stdin);
 EXPORT_SYMBOL(stdout);

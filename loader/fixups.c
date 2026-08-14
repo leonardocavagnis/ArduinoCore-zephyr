@@ -184,7 +184,7 @@ int smh_init(void) {
 	}
 
 #if !defined(CONFIG_BOARD_ARDUINO_NICLA_VISION)
-	__stm32_sdram1_section static uint8_t __aligned(32) smh_pool[4 * 1024 * 1024];
+	Z_GENERIC_SECTION(SDRAM1) static uint8_t __aligned(32) smh_pool[4 * 1024 * 1024];
 
 	struct shared_multi_heap_region smh_sdram = {
 		.addr = (uintptr_t)smh_pool,
@@ -217,7 +217,7 @@ int maybe_flash_bootloader(void) {
 	const struct flash_area *fa;
 	int rc;
 
-	rc = flash_area_open(FIXED_PARTITION_ID(mcuboot), &fa);
+	rc = flash_area_open(PARTITION_ID(mcuboot), &fa);
 	if (rc) {
 		printk("Failed to open flash area, rc %d\n", rc);
 		return rc;

@@ -65,6 +65,7 @@
 	ov7670: ov7670@21 {
 		compatible = "ovti,ov7670";
 		reg = <0x21>;
+		zephyr,deferred-init;
 
 		reset-gpios = <&gpioe 3 GPIO_ACTIVE_LOW>;
 		pwdn-gpios = <&gpiod 5 GPIO_ACTIVE_LOW>;
@@ -79,7 +80,6 @@
 
 &i2c1 {
 	status = "okay";
-	zephyr,deferred-init;
 };
 
 &i2c4 {
@@ -512,7 +512,7 @@ qspi_flash: &mx25l12833f {};
 	def-back-color-red = <0>;
 	def-back-color-green = <0>;
 	def-back-color-blue = <0>;
-	pixel-format = <PANEL_PIXEL_FORMAT_RGB_565>;
+	pixel-format = <PANEL_PIXEL_FORMAT_RGB_888>;
 
 	display-timings {
 		compatible = "zephyr,panel-timing";

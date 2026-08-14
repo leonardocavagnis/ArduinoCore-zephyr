@@ -33,11 +33,22 @@ if(NOT EXISTS ${ARDUINO_API_BLOB_ARCHIVE})
 endif()
 
 if(NOT IS_DIRECTORY ${ARDUINO_API_BLOB_DIR})
+  # A new version of the API was downloaded, so extract it to the blob
+  # directory and copy it to cores/arduino/api
   file(ARCHIVE_EXTRACT
     INPUT ${ARDUINO_API_BLOB_ARCHIVE}
     DESTINATION ${ARDUINO_API_BLOB_ROOT_DIR}
     PATTERNS */api/* # only extract the 'api' directory from the archive
   )
+  set(update_api_copy TRUE)
+elseif(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/cores/arduino/api)
+  # There's nothing where the API should be, copy the extracted API files
+  set(update_api_copy TRUE)
+else()
+  set(update_api_copy FALSE)
+endif()
+
+if(update_api_copy)
   file(REMOVE_RECURSE ${CMAKE_CURRENT_SOURCE_DIR}/cores/arduino/api)
   file(COPY ${ARDUINO_API_BLOB_DIR}/api DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/cores/arduino)
 endif()

@@ -519,10 +519,11 @@ jobs:
         uses: pillo79/compile-sketches@next
         with:
           # Use ci-builds core, if possible, to use the exact set of tools required by the source
-          fqbn: ${{ env.FQBN }} ${{ env.CI_BUILDS_URL }}
+          fqbn: ${{ env.FQBN }}
           platforms: |
             # Use Board Manager version first to install the tools
             - name: ${{ env.PLAT }}
+              ${{ env.CI_BUILDS_URL != '' && format('source-url: {0}', env.CI_BUILDS_URL) || '' }}
             # ... then replace that with the local version
             - name: ${{ env.PLAT }}
               source-path: "ArduinoCore-zephyr"

@@ -32,6 +32,13 @@ if [ -n "$MISSING_TOOLS" ]; then
   exit 2
 fi
 
+if [ -n "$WEST_CACHE" ]; then
+  # Set in CI context, uses a shared cache for west blobs and modules
+  mkdir -p $WEST_CACHE/blobs $WEST_CACHE/modules
+  WEST_BLOBS_CACHE="--cache-dirs $WEST_CACHE/blobs --auto-cache $WEST_CACHE/blobs"
+  WEST_MODULES_CACHE="--auto-cache $WEST_CACHE/modules"
+fi
+
 get_unique_field_values() {
   local field="$1"
   local file="$2"
@@ -52,7 +59,6 @@ source venv/bin/activate
 pip3 install west protobuf grpcio-tools
 log_msg "endgroup"
 
-log_msg "group" "Initializing Zephyr workspace and modules: $HAL_FILTER"
 if ! [ -d ../.west ] ; then
   log_msg "group" "Initializing Zephyr workspace and modules: $HAL_FILTER"
   west init -l .
@@ -61,7 +67,7 @@ else
   log_msg "group" "Refreshing workspace and modules: $HAL_FILTER"
 fi
 west config manifest.project-filter -- "$HAL_FILTER"
-west update "$@"
+west update $WEST_MODULES_CACHE "$@"
 west zephyr-export
 pip3 install -r ../zephyr/scripts/requirements-base.txt
 log_msg "endgroup"
@@ -84,5 +90,5 @@ done
 
 NEEDED_HALS="arduino-api $NEEDED_HALS"
 log_msg "group" "Fetching blobs for: $NEEDED_HALS"
-west blobs fetch $NEEDED_HALS
+west blobs $WEST_BLOBS_CACHE fetch $NEEDED_HALS
 log_msg "endgroup"

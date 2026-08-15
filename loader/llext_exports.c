@@ -17,6 +17,7 @@
 #include <sys/time.h>
 #include <zephyr/drivers/pinctrl.h>
 #include <zephyr/device.h>
+#include <zephyr/posix/unistd.h>
 #if defined(CONFIG_MBEDTLS)
 #include <mbedtls/memory_buffer_alloc.h>
 #include <mbedtls/debug.h>
@@ -252,6 +253,8 @@ FORCE_EXPORT_SYM(bt_ctlr_set_public_addr);
 #if defined(CONFIG_STACK_CANARIES)
 FORCE_EXPORT_SYM(__stack_chk_guard);
 FORCE_EXPORT_SYM(__stack_chk_fail);
+// Required by  __stack_chk_init()
+EXPORT_LIBC_SYM(getentropy);
 #endif
 
 #if defined(CONFIG_VIDEO)

@@ -256,6 +256,11 @@ W4(int, vsnprintf, char *, size_t, const char *, va_list)
 /* time.h */
 W2(int, gettimeofday, struct timeval *, void *)
 
+#ifdef CONFIG_STACK_CANARIES
+/* zephyr/posix/unistd.h */
+W2(int, getentropy, void *, size_t)
+#endif
+
 /*
  * Variadic stdio functions cannot be expressed with the tail-call wrapper
  * macros above. Provide explicit trampolines that capture the argument list

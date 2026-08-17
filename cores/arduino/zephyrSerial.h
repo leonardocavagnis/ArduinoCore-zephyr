@@ -127,14 +127,26 @@ protected:
 /* Serial object associated with the first HW serial (usually on D0/D1). */
 #define ARDUINO_HARDWARE_SERIAL ZARD_SERIAL_NAME(0)
 
+#if DT_NODE_HAS_PROP(DT_PATH(zephyr_user), arduino_router_serial)
+/* If the board has an arduino,router-serial node, and the currently used
+ * library has the support, then the 'Serial' object is actually the same as
+ * the Monitor object in the Arduino_RouterBridge library.
+ */
+#define ZARD_FIRST_SERIAL_IS_ARDUINO_ROUTER 1
+#define ARDUINO_ROUTER_PHANDLE              DT_PROP(DT_PATH(zephyr_user), arduino_router_serial)
+#define ARDUINO_ROUTER_SERIAL               ZARD_SERIAL_NAME(ZARD_SERIAL_INDEXOF(ARDUINO_ROUTER_PHANDLE))
+#endif
+
 #if DT_NODE_HAS_PROP(DT_PATH(zephyr_user), cdc_acm_serial)
 /* Devicetree requires a SerialUSB object for 'Serial'. */
-#define ZARD_SKIP_FIRST_SERIAL 1
 #if CONFIG_USBD_CDC_ACM_CLASS
 /* SerialUSB can be compiled in the project. */
 #define ZARD_BOARD_HAS_SERIALUSB 1
 #define SERIALUSB_PHANDLE DT_PROP(DT_PATH(zephyr_user), cdc_acm_serial)
+#if !ZARD_FIRST_SERIAL_IS_ARDUINO_ROUTER
+/* Router takes precedence when both are defined. */
 #define ZARD_FIRST_SERIAL_IS_SERIALUSB 1
+#endif
 #else
 /* SerialUSB is required but no driver was enabled for the USB CDC ACM device.
  * Define a stub Serial object to avoid build errors.
@@ -143,15 +155,10 @@ protected:
 #endif
 #endif
 
-#if DT_NODE_HAS_PROP(DT_PATH(zephyr_user), arduino_router_serial)
-/* If the board has an arduino,router-serial node, and the currently used
- * library has the support, then the 'Serial' object is actually the same as
- * the Monitor object in the Arduino_RouterBridge library.
- */
-#define ZARD_SKIP_FIRST_SERIAL              1
-#define ZARD_FIRST_SERIAL_IS_ARDUINO_ROUTER 1
-#define ARDUINO_ROUTER_PHANDLE              DT_PROP(DT_PATH(zephyr_user), arduino_router_serial)
-#define ARDUINO_ROUTER_SERIAL               ZARD_SERIAL_NAME(ZARD_SERIAL_INDEXOF(ARDUINO_ROUTER_PHANDLE))
+/* If one of the above groups match, they will define the first Serial object */
+#if ZARD_FIRST_SERIAL_IS_SERIALUSB || ZARD_FIRST_SERIAL_IS_ARDUINO_ROUTER ||                       \
+	ZARD_FIRST_SERIAL_IS_STUB
+#define ZARD_SKIP_FIRST_SERIAL 1
 #endif
 
 /* Name of a Serial object for a given index. */

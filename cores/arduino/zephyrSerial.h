@@ -130,7 +130,7 @@ protected:
 #if DT_NODE_HAS_PROP(DT_PATH(zephyr_user), cdc_acm_serial)
 /* Devicetree requires a SerialUSB object for 'Serial'. */
 #define ZARD_SKIP_FIRST_SERIAL 1
-#if (CONFIG_USB_CDC_ACM || CONFIG_USBD_CDC_ACM_CLASS)
+#if CONFIG_USBD_CDC_ACM_CLASS
 /* SerialUSB can be compiled in the project. */
 #define ZARD_FIRST_SERIAL_IS_SERIALUSB 1
 #else

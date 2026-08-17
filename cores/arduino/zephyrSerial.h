@@ -121,8 +121,17 @@ protected:
 #define ZARD_SERIAL_INDEXOF(node)                                                                  \
 	DT_FOREACH_PROP_ELEM_VARGS(DT_PATH(zephyr_user), serials, ZARD_SERIAL_MATCH, node)
 
+/* Get the name of the Serial object associated with a given node. If the node
+ * is not in the 'serials' array, then check if it is the SerialUSB node.
+ */
+#define ZARD_SERIAL_NAME_BY_NODE(node)                                                             \
+	COND_CODE_0(IS_EMPTY(ZARD_SERIAL_INDEXOF(node)),                                           \
+                    (ZARD_SERIAL_NAME(ZARD_SERIAL_INDEXOF(node))),			           \
+                    (COND_CODE_1(DT_SAME_NODE(node, ZARD_SERIALUSB_PHANDLE),                       \
+                                 (SerialUSB), (unkown Serial object))))
+
 /* Serial object associated with the Zephyr console. */
-#define ARDUINO_CONSOLE_SERIAL ZARD_SERIAL_NAME(ZARD_SERIAL_INDEXOF(DT_CHOSEN(zephyr_console)))
+#define ARDUINO_CONSOLE_SERIAL ZARD_SERIAL_NAME_BY_NODE(DT_CHOSEN(zephyr_console))
 
 /* Serial object associated with the first HW serial (usually on D0/D1). */
 #define ARDUINO_HARDWARE_SERIAL ZARD_SERIAL_NAME(0)
@@ -134,7 +143,7 @@ protected:
  */
 #define ZARD_FIRST_SERIAL_IS_ARDUINO_ROUTER 1
 #define ARDUINO_ROUTER_PHANDLE              DT_PROP(DT_PATH(zephyr_user), arduino_router_serial)
-#define ARDUINO_ROUTER_SERIAL               ZARD_SERIAL_NAME(ZARD_SERIAL_INDEXOF(ARDUINO_ROUTER_PHANDLE))
+#define ARDUINO_ROUTER_SERIAL               ZARD_SERIAL_NAME_BY_NODE(ARDUINO_ROUTER_PHANDLE)
 #endif
 
 #if DT_NODE_HAS_PROP(DT_PATH(zephyr_user), cdc_acm_serial)
@@ -142,9 +151,9 @@ protected:
 #if CONFIG_USBD_CDC_ACM_CLASS
 /* SerialUSB can be compiled in the project. */
 #define ZARD_BOARD_HAS_SERIALUSB 1
-#define SERIALUSB_PHANDLE DT_PROP(DT_PATH(zephyr_user), cdc_acm_serial)
+#define ZARD_SERIALUSB_PHANDLE   DT_PROP(DT_PATH(zephyr_user), cdc_acm_serial)
+/* Router takes precedence as 'Serial' when both are defined. */
 #if !ZARD_FIRST_SERIAL_IS_ARDUINO_ROUTER
-/* Router takes precedence when both are defined. */
 #define ZARD_FIRST_SERIAL_IS_SERIALUSB 1
 #endif
 #else

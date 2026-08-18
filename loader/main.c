@@ -41,10 +41,11 @@ struct sketch_header_v1 {
 #define SKETCH_RAM_BUFFER_LEN 131072
 
 /* Need to replicate logic from zephyrSerial.h to avoid C++ here */
+#define ZARD_BOARD_HAS_SERIALUSB                                                                   \
+	DT_NODE_HAS_PROP(DT_PATH(zephyr_user), cdc_acm_serial) && CONFIG_USBD_CDC_ACM_CLASS
 #define ZARD_FIRST_SERIAL_IS_SERIALUSB                                                             \
-	DT_NODE_HAS_PROP(DT_PATH(zephyr_user), cdc_acm_serial) &&                                      \
-		CONFIG_USBD_CDC_ACM_CLASS &&                                       \
-		!(DT_NODE_HAS_PROP(DT_PATH(zephyr_user), arduino_router_serial))
+	ZARD_BOARD_HAS_SERIALUSB && !(DT_NODE_HAS_PROP(DT_PATH(zephyr_user), arduino_router_serial))
+
 #if ZARD_FIRST_SERIAL_IS_SERIALUSB
 const struct device *const usb_dev =
 	DEVICE_DT_GET(DT_PHANDLE_BY_IDX(DT_PATH(zephyr_user), cdc_acm_serial, 0));

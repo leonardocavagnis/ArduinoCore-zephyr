@@ -8,6 +8,8 @@
 
 #include <zephyrSerial.h>
 
+#if ZARD_BOARD_HAS_SERIALUSB
+
 #include <zephyr/usb/usbd.h>
 
 extern "C" struct usbd_context *usbd_init_device(usbd_msg_cb_t msg_cb);
@@ -50,6 +52,10 @@ private:
 };
 } // namespace arduino
 
+extern arduino::SerialUSB_ SerialUSB;
+
 #if ZARD_FIRST_SERIAL_IS_SERIALUSB
 extern arduino::SerialUSB_ Serial;
 #endif
+
+#endif /* ZARD_BOARD_HAS_SERIALUSB */

@@ -132,6 +132,8 @@ protected:
 #define ZARD_SKIP_FIRST_SERIAL 1
 #if CONFIG_USBD_CDC_ACM_CLASS
 /* SerialUSB can be compiled in the project. */
+#define ZARD_BOARD_HAS_SERIALUSB 1
+#define SERIALUSB_PHANDLE DT_PROP(DT_PATH(zephyr_user), cdc_acm_serial)
 #define ZARD_FIRST_SERIAL_IS_SERIALUSB 1
 #else
 /* SerialUSB is required but no driver was enabled for the USB CDC ACM device.

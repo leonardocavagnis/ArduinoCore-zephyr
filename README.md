@@ -1,4 +1,4 @@
-> [!IMPORTANT]  
+> [!IMPORTANT]
 > This core is approaching a 1.0 release. Now is the time to use it and report any issues you find — your feedback helps us iron out the remaining bugs!
 >
 > [![Default branch status](https://github.com/arduino/ArduinoCore-zephyr/actions/workflows/package_core.yml/badge.svg?branch=main&event=push)](https://github.com/arduino/ArduinoCore-zephyr/actions/workflows/package_core.yml)
@@ -17,7 +17,7 @@ Core](https://github.com/arduino/ArduinoCore-mbed) on all the devices it
 supported, and to provide a more modern and flexible foundation for current and
 future Arduino boards by allowing the use of Zephyr RTOS features and APIs.
 
-## 🧐 What is Zephyr? 
+## 🧐 What is Zephyr?
 
 [Zephyr RTOS](https://zephyrproject.org/) is an open-source, real-time operating system designed for low-power, resource-constrained devices. It's modular, scalable, and supports multiple architectures.
 
@@ -51,7 +51,7 @@ To manually force a loader update, follow these steps:
   * Note that due to limitations in the Arduino IDE, you may need to select any programmer from the `Programmers` menu.
 * Once the bootloader is installed, you can load your first sketch by placing the board into bootloader mode again.
 
-> [!NOTE]  
+> [!NOTE]
 > After the initial setup, future sketches will be loaded automatically without
 > needing to reset the board. Each sketch update will also reflash the loader
 > if a different version is detected.
@@ -94,6 +94,15 @@ See the [Using the Core in Arduino IDE/CLI](#using-the-core-in-arduino-idecli) s
 #### **Q: Wi-Fi is not working, or I get `Communication with WiFi module failed!` in the Serial Monitor**
 **A:** You are probably missing the Wi-Fi firmware, or the firmware is corrupted. Boards should come with the Wi-Fi firmware already flashed, but in case Wi-Fi is not working run the [`FlashFormat`](libraries/Storage/examples/FlashFormat/FlashFormat.ino) sketch to restore the firmware.
 
+---
+
+#### **Q: I get a `No binaries found for <board>.` when compiling a custom core**
+
+**A:** To use the Zephyr core from sources, it is not enough to install them in
+your `hardware` folder. You also need to obtain the *Zephyr loader* for the
+boards you want to use. Read on from [Under the hood](#-under-the-hood) below
+to learn how to build (or get!) those binaries.
+
 ## 📚 Libraries
 
 A number of libraries are bundled with the core, and many more external
@@ -119,10 +128,10 @@ The behavior of the `loader` can be adjusted through the `Mode` menu of the IDE:
 The most important components of this project are:
 
 * [Zephyr based loader](/loader)
-* [LLEXT](https://docs.zephyrproject.org/latest/services/llext/index.html)
-* [Actual core](/cores/arduino) with [variants](/variants) and the usual [platform](/platform.txt) and [boards](/boards) files
-* [ArduinoCore-API](https://github.com/arduino/ArduinoCore-API)
-* [zephyr-sketch-tool](/extra/zephyr-sketch-tool)
+* [Actual core](/cores/arduino) with [variants](/variants) and the usual [platform](/platform.txt) and [boards](/boards) TXT files
+* The official [ArduinoCore-API](https://github.com/arduino/ArduinoCore-API)
+* [LLEXT](https://docs.zephyrproject.org/latest/services/llext/index.html) as the glue layer between sketch and loader
+* [zephyr-sketch-tool](/extra/zephyr-sketch-tool) for packaging the sketch binary
 
 ## 🏃 Shortcut: using the Core in Arduino IDE/CLI without installing Zephyr
 
@@ -130,16 +139,16 @@ The most important components of this project are:
 >
 > If you are only interested in developing features in the [core](/cores/arduino)
 > or [libraries](/libraries), and do not want to set up a full Zephyr build
-> environment, you can use the [`sync-zephyr-artifacts`](/extra/sync-zephyr-artifacts) 
+> environment, you can use the [`sync-zephyr-artifacts`](/extra/sync-zephyr-artifacts)
 > utility to download a pre-built version of the files needed to compile
 > sketches and flash the loader.
 >
 > To do so, after cloning this repo, compile the `sync-zephyr-artifacts`
-> utility via `go build` and run it as `sync-zephyr-artifacts .` to retrieve
-> the precompiled files for the current revision of the core. 
+> utility via `go build` and run it as `sync-zephyr-artifacts <path-to-core>`
+> to retrieve the precompiled files for the current revision of the core.
 >
 > Next, follow the instructions in [Using the Core in Arduino IDE/CLI](#using-the-core-in-arduino-idecli)
-> or [Using the Core in the Arduino App Lab](#using-the-core-in-the-arduino-app-lab) 
+> or [Using the Core in the Arduino App Lab](#using-the-core-in-the-arduino-app-lab)
 > to start using the core in your preferred Arduino software.
 > Remember to [update the loader on your board](#flash-the-loader) as well.
 
@@ -176,7 +185,7 @@ There are two strategies to set up the sources for building the loader on Window
 2) Install the sources within the WSL file system, like: `~/git/ArduinoCore-zephyr`
 
 There are pros and cons to both strategies:
-1) Builds on the native Windows file system are relatively very slow, but once done, you can use the results directly within the Arduino IDE. 
+1) Builds on the native Windows file system are relatively very slow, but once done, you can use the results directly within the Arduino IDE.
 2) Builds on WSL's file system are a lot faster, however, you need to copy the resulting build back to somewhere in your Windows directory structure. Use this location in the Arduino IDE as mentioned below in the [Using the Core in Arduino IDE/CLI](#using-the-core-in-arduino-idecli) section.
 
 ### Run the ```bootstrap``` script
@@ -263,12 +272,12 @@ Once this is done, your development folder will appear in the IDE/CLI package
 list as `arduino-git:zephyr`, and the Fully Qualified Board Name (FQBN) to use
 will be `arduino-git:zephyr:name_from_boards_txt`.
 
-Remember to also install and/or update the officially published core in the IDE Board Manager to get the latest tools and dependencies. 
+Remember to also install and/or update the officially published core in the IDE Board Manager to get the latest tools and dependencies.
 [⚙️ Installation](#️-installation).
 
 ### Using the Core in the Arduino App Lab
 
-> [!WARNING] 
+> [!WARNING]
 > Arduino App Lab expects a hardcoded FQBN (`arduino:zephyr:unoq` for the UNO Q), so the [technique used for Arduino IDE/CLI](#using-the-core-in-arduino-idecli) **does not** work. A small workaround is required.
 
 1. Disable the release core

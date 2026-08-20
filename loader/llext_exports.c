@@ -151,11 +151,6 @@ EXPORT_SYMBOL(pinctrl_lookup_state);
 EXPORT_SYMBOL(pinctrl_configure_pins);
 #endif
 
-#if defined(CONFIG_USB_DEVICE_STACK)
-EXPORT_SYMBOL(usb_enable);
-EXPORT_SYMBOL(usb_disable);
-#endif
-
 #if CONFIG_LOG
 EXPORT_SYMBOL(z_log_msg_runtime_vcreate);
 FORCE_EXPORT_SYM(log_const_sketch)

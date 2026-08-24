@@ -19,7 +19,7 @@ compiler.path={build.compiler_path}
 compiler.c.cmd={build.crossprefix}gcc
 compiler.c.flags=-g -Os -c {compiler.define} {compiler.warning_flags} {compiler.zephyr.macros} "@{compiler.zephyr.machine_flags_file}" "@{compiler.zephyr.cflags_file}" -fdata-sections -ffunction-sections -MMD
 compiler.c.elf.cmd={build.crossprefix}g++
-compiler.c.elf.flags=-Wl,--gc-sections "@{compiler.zephyr.machine_flags_file}" -std=gnu++17
+compiler.c.elf.flags=-Wl,--gc-sections -Wl,-z,noexecstack "@{compiler.zephyr.machine_flags_file}" -std=gnu++17
 compiler.S.cmd={build.crossprefix}g++
 compiler.S.flags=-c -x assembler-with-cpp "@{compiler.zephyr.machine_flags_file}"
 compiler.cpp.cmd={build.crossprefix}g++

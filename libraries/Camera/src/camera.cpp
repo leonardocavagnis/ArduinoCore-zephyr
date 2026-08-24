@@ -57,7 +57,7 @@ struct video_buffer *user_video_buffer_aligned_alloc(size_t size, size_t align,
 													 k_timeout_t timeout) {
 	struct video_buffer *vbuf = NULL;
 	struct mem_block *block = NULL;
-	int i;
+	unsigned int i;
 
 	ARG_UNUSED(timeout);
 
@@ -104,7 +104,7 @@ struct video_buffer *user_video_buffer_aligned_alloc(size_t size, size_t align,
 
 int user_video_buffer_release(struct video_buffer *vbuf) {
 	struct mem_block *block = NULL;
-	int i;
+	unsigned int i;
 
 	if (vbuf == NULL) {
 		return -EINVAL;

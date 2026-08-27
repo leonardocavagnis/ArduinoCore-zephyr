@@ -495,15 +495,7 @@ static struct gpio_callback button_cb_data;
 
 int system_utilities(void) {
 
-	/* Linux Ready GPIO input */
-	const struct gpio_dt_spec spec =
-		GPIO_DT_SPEC_GET_BY_IDX(DT_PATH(zephyr_user), control_gpios, 0);
-	gpio_pin_configure_dt(&spec, GPIO_INPUT | GPIO_PULL_DOWN);
-
-	const struct gpio_dt_spec EDL_mode =
-		GPIO_DT_SPEC_GET_BY_IDX(DT_PATH(zephyr_user), control_gpios, 1);
-	gpio_pin_configure_dt(&EDL_mode, GPIO_INPUT);
-
+	/* 1.8V fault check */
 	const struct gpio_dt_spec fault_1v8 =
 		GPIO_DT_SPEC_GET_BY_IDX(DT_PATH(zephyr_user), control_gpios, 2);
 	gpio_pin_configure_dt(&fault_1v8, GPIO_INPUT | GPIO_PULL_UP);
@@ -517,10 +509,21 @@ int system_utilities(void) {
 				gpio_pin_toggle_dt(&led0r);
 				gpio_pin_toggle_dt(&led1r);
 				k_sleep(K_MSEC(200));
-				gpio_pin_configure_dt(&force_reboot, GPIO_INPUT | GPIO_PULL_UP);
 			}
+			gpio_pin_configure_dt(&force_reboot, GPIO_INPUT | GPIO_PULL_UP);
+			k_sleep(K_SECONDS(1));
+			gpio_pin_configure_dt(&force_reboot, GPIO_OUTPUT | GPIO_PULL_DOWN);
 		}
 	}
+
+	/* Linux Ready GPIO input */
+	const struct gpio_dt_spec spec =
+		GPIO_DT_SPEC_GET_BY_IDX(DT_PATH(zephyr_user), control_gpios, 0);
+	gpio_pin_configure_dt(&spec, GPIO_INPUT | GPIO_PULL_DOWN);
+
+	const struct gpio_dt_spec EDL_mode =
+		GPIO_DT_SPEC_GET_BY_IDX(DT_PATH(zephyr_user), control_gpios, 1);
+	gpio_pin_configure_dt(&EDL_mode, GPIO_INPUT);
 
 	gpio_pin_configure_dt(&power_button, GPIO_INPUT | GPIO_PULL_UP);
 	gpio_init_callback(&button_cb_data, button_irq, BIT(power_button.pin));

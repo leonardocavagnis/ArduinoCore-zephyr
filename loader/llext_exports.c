@@ -333,6 +333,8 @@ EXPORT_SYMBOL(k_work_schedule_for_queue);
 EXPORT_SYMBOL(k_work_reschedule_for_queue);
 EXPORT_SYMBOL(k_work_queue_start);
 EXPORT_SYMBOL(k_work_submit_to_queue);
+EXPORT_SYMBOL(k_work_cancel);
+EXPORT_SYMBOL(k_work_cancel_delayable);
 // FORCE_EXPORT_SYM(k_timer_user_data_set);
 // FORCE_EXPORT_SYM(k_timer_start);
 

@@ -15,11 +15,11 @@
 void start_static_threads();
 #endif
 
-// This function will be overwriten by most variants.
+// This function will be overwritten by most variants.
 void __attribute__((weak)) initVariant(void) {
 }
 
-// This function can be overwriten by one library.
+// This function can be overwritten by one library.
 void __attribute__((weak)) __loopHook(void) {
 }
 

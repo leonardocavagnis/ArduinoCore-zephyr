@@ -477,6 +477,17 @@
 
 		cdc-acm-serial = <&board_cdc_acm_uart>; /* 'Serial' object is managed by SerialUSB */
 		serials = <&uart9>, <&uart7>, <&uart6>, <&uart5>; /* 'Serial1' onwards */
+
+		/* On-board ESP32-C3 coprocessor: the UART it is flashed over, and the
+		 * control lines a host flashing tool drives through DTR/RTS.
+		 *   boot-gpios  : P803 (ESP32-C3 GPIO0 / download strap)
+		 *   reset-gpios : P804 (ESP32-C3 EN / reset)
+		 * Both are active low, so the GPIO flags carry the polarity.
+		 */
+		coprocessor-serial = <&uart8>;
+		coprocessor-boot-gpios = <&ioport8 3 GPIO_ACTIVE_LOW>;
+		coprocessor-reset-gpios = <&ioport8 4 GPIO_ACTIVE_LOW>;
+
 		i2cs = <&iic0>, <&iic1>, <&i2c3>;
 		spis = <&sci4_spi>, <&spi1>;
 		pwms = <&pwm1 0 PWM_HZ(490) PWM_POLARITY_NORMAL>,

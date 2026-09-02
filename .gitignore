@@ -5,6 +5,9 @@
 /boards.local.txt
 /platform.local.txt
 /loader/VERSION
+/cores/arduino/api/
+
+__pycache__/
 
 llext-edk/
 cflags.txt

@@ -1,7 +1,4 @@
-> [!IMPORTANT]
-> This core is approaching a 1.0 release. Now is the time to use it and report any issues you find — your feedback helps us iron out the remaining bugs!
->
-> [![Default branch status](https://github.com/arduino/ArduinoCore-zephyr/actions/workflows/package_core.yml/badge.svg?branch=main&event=push)](https://github.com/arduino/ArduinoCore-zephyr/actions/workflows/package_core.yml)
+[![Default branch status](https://github.com/arduino/ArduinoCore-zephyr/actions/workflows/package_core.yml/badge.svg?branch=main&event=push)](https://github.com/arduino/ArduinoCore-zephyr/actions/workflows/package_core.yml)
 
 # 🪁 Arduino Core for Zephyr
 
@@ -102,6 +99,14 @@ See the [Using the Core in Arduino IDE/CLI](#using-the-core-in-arduino-idecli) s
 your `hardware` folder. You also need to obtain the *Zephyr loader* for the
 boards you want to use. Read on from [Under the hood](#-under-the-hood) below
 to learn how to build (or get!) those binaries.
+
+---
+
+#### **Q: My sketch running on Portenta C33 takes a long time to start, and the initial serial output is lost**
+
+**A:** This is caused by legacy firmware running on the Portenta C33's ESP32 Wi-Fi chip. Follow the [instructions](libraries/WiFi/examples/SerialBridge/README.md) to update the firmware to the latest version.  
+If you want to rollback to the Renesas core, remember to downgrade the firmware to the legacy version.
+
 
 ## 📚 Libraries
 
